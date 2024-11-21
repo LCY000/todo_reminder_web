@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帳戶管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #3a77bc;
+            color: white;
+            height: 66px; /* 固定高度 */
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info a{
+            margin: 0;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            color: #3a77bc;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .user-info a:hover {
+            background-color: #d0e1f9;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #3a77bc;
+        }
+
+        .flash-message {
+            background-color: #ffcccc;
+            color: #cc0000;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: 100%; 
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3a77bc;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2c5a8a;
+        }
+
+        .delete-button {
+            background-color: #e74c3c;
+            margin-top: 20px;
+        }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="user-info">
+            <a href="{{ url_for('index') }}">返回主頁</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>帳戶管理</h1>
+
+        <!-- Flash 訊息區 -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="flash-message">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('account') }}" method="POST">
+            <label for="username">使用者名稱:</label>
+            <input type="text" name="username" value="{{ current_user.username }}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="{{ current_user.email }}" required>
+
+            <label for="password">新密碼（可選）:</label>
+            <input type="password" name="password">
+
+            <button type="submit">更新帳戶</button>
+        </form>
+
+        <!-- 刪除帳戶表單 -->
+        <form action="{{ url_for('delete_account') }}" method="POST">
+            <button type="submit" class="delete-button" onclick="return confirm('確定要刪除帳戶嗎？此操作無法復原')">刪除帳戶</button>
+        </form>
+    </div>
+</body>
+</html>
